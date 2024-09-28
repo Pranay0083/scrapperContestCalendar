@@ -7,7 +7,7 @@ const scraper = async () => {
         await scrapePage1();
         await scrapePage2();
         await scrapePage3();
-        console.log('Scraping completed successfully!');
+        console.log('Coding Ninjas scraping completed successfully!');
     } catch (error) {
         console.error('Error during scraping:', error);
     }

@@ -1,18 +1,16 @@
 [
   {
-    "id": "cbdce36f-a52c-4b8c-9908-fc01cc2c9602",
+    "id": "b92bef83-e59b-4f5f-b36e-ddf9cbd33784",
     "event": "GfG Weekly - 174 [Rated Contest]",
     "resource": "https://www.geeksforgeeks.org/events",
-    "date": "September 29, 2024",
-    "time": "07:00 PM IST",
+    "date": "2024-09-29T08:00:00.000Z",
     "href": "https://practice.geeksforgeeks.org/contest/gfg-weekly-174-rated-contest"
   },
   {
-    "id": "f41abe81-0518-422e-8882-eb7e5ce2b085",
+    "id": "e0892fcc-41ff-47a6-ade0-ad22f37bb7ff",
     "event": "Job-A-Thon 38 Hiring Challenge",
     "resource": "https://www.geeksforgeeks.org/events",
-    "date": "October 21, 2024",
-    "time": "08:00 PM IST",
+    "date": "2024-10-21T09:00:00.000Z",
     "href": "https://practice.geeksforgeeks.org/contest/job-a-thon-38-hiring-challenge"
   }
 ]

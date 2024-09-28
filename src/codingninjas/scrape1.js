@@ -7,61 +7,49 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function parseStartTime(startTime) {
-    const regex = /(\d{1,2}) (\w{3}) (\d{4}) @(\d{1,2}):(\d{2}) (AM|PM) IST/;
-    const match = startTime.match(regex);
-    if (match) {
-        const [_, day, month, year, hour, minute, period] = match;
-        const dateStr = `${day} ${month} ${year} ${hour}:${minute} ${period}`;
-        const date = new Date(dateStr);
-        const formattedDate = date.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-            timeZone: 'Asia/Kolkata'
-        });
-        const formattedTime = date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-            timeZone: 'Asia/Kolkata'
-        });
-        return {
-            date: formattedDate,
-            time: `${formattedTime} IST`
-        };
+function parseDateString(dateString) {
+    // Helper function to pad numbers to two digits
+    const pad = (num) => num.toString().padStart(2, '0');
+
+    let date;
+
+    // Handle absolute date like "03 Oct 2024 @08:00 PM IST"
+    const dateTimeRegex = /^(\d{2}) (\w{3}) (\d{4}) @(\d{2}):(\d{2}) (AM|PM) IST$/;
+    const matchDateTime = dateString.match(dateTimeRegex);
+
+    if (matchDateTime) {
+        const [_, day, month, year, hour, minute, period] = matchDateTime;
+
+        // Convert month name to number (0-11)
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIndex = monthNames.indexOf(month);
+
+        // Adjust hour for AM/PM format
+        let hour24 = parseInt(hour, 10);
+        if (period === "PM" && hour24 !== 12) hour24 += 12;
+        if (period === "AM" && hour24 === 12) hour24 = 0;
+
+        // Create a Date object
+        date = new Date(Date.UTC(parseInt(year), monthIndex, parseInt(day), hour24, parseInt(minute), 0));
     }
-    return {
-        date: false,
-        time: false
-    };
-}
-function formatISODateToReadable(dateString) {
-    // Parse the ISO date string
-    const date = new Date(dateString);
-
-    // Define an array of month names
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    // Extract the day, month, and year
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-
-    // Format it into "Month Day, Year" format
-    return `${month} ${day}, ${year}`;
-}
-function calculateFutureDate(daysString) {
-    const days = parseInt(daysString.match(/\d+/), 10);
-    if (isNaN(days)) {
-        throw new Error("Invalid input for days string");
+    // Handle relative date like "Starts in 4 days"
+    else if (dateString.startsWith("Starts in")) {
+        const relativeDays = parseInt(dateString.match(/Starts in (\d+) days/)[1], 10);
+        date = new Date(); // Current date
+        date.setUTCDate(date.getUTCDate() + relativeDays);
+    } else {
+        return null; // Invalid format
     }
-    const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + days);
-    return currentDate;
+
+    // Convert date to ISO 8601 format with 'Z' (UTC timezone)
+    const year = date.getUTCFullYear();
+    const month = pad(date.getUTCMonth() + 1); // Months are 0-indexed in JavaScript
+    const day = pad(date.getUTCDate());
+    const hours = pad(date.getUTCHours());
+    const minutes = pad(date.getUTCMinutes());
+    const seconds = pad(date.getUTCSeconds());
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
 }
 
 async function scrapePage() {
@@ -78,13 +66,11 @@ async function scrapePage() {
         contestCards.each((index, element) => {
             const title = ratedContestInfo(element).find('.contest-title').text().trim();
             const startTime = ratedContestInfo(element).find('.contest-timing').text().trim();
-            const start = parseStartTime(startTime);
             contestData.push({
                 id: uuidv4(),
                 event: title,
                 resource: "https://www.naukri.com/code360/contests",
-                date: start.date,
-                time: start.time,
+                date: parseDateString(startTime),
                 href: "https://www.naukri.com/code360/contests",
             });
         });
@@ -101,22 +87,20 @@ async function scrapePage() {
                     href: resource,
                     event: event,
                     date: startTime,
-                    time: startTime,
                 });
-            }else{
+            } else {
                 contestData.push({
                     id: uuidv4(),
                     resource: resource,
                     href: resource,
                     event: event,
-                    date: formatISODateToReadable(calculateFutureDate(startTime)),
-                    time: startTime,
+                    date: parseDateString(startTime),
                 });
             }
-            
+
         });
-        await fs.writeFile('data.json', JSON.stringify(contestData, null, 2));
-        console.log("Contest data extracted and saved successfully!");
+        await fs.writeFile('codingninjas.json', JSON.stringify(contestData, null, 2));
+        console.log('Contest data of Coding Ninjas saved to data.json');
     } catch (error) {
         console.error("Error during scraping:", error);
     } finally {

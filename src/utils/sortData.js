@@ -1,17 +1,17 @@
-const parseDateTime = (event) => {
-    if (event.date.toLowerCase() === "live now") {
-        return 0;
-    }
-    const date = new Date(event.date + " " + event.time);
-    return date.getTime();
-};
+export function sortEventsByDate(events) {
+    const now = new Date();
 
-export const sortEvents = (events) => {
+    const parseDate = (dateString) => {
+        if (dateString === "Live Now") {
+            return new Date(0); // Treat "Live Now" as the earliest possible date
+        }
+        const date = new Date(dateString);
+        return date < now ? new Date(0) : date; // Treat past dates as "Live Now"
+    };
+
     return events.sort((a, b) => {
-        const dateA = parseDateTime(a);
-        const dateB = parseDateTime(b);
+        const dateA = parseDate(a.date || a.start || "Live Now");
+        const dateB = parseDate(b.date || b.start || "Live Now");
         return dateA - dateB;
     });
-};
-
-// This exports `sortEvents` using ES module syntax
+}

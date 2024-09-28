@@ -7,39 +7,17 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function convertDateTimeToIST(dateString, timeString) {
-    const [day, month, year] = dateString.split(' ');
-    const [_, time] = timeString.split(' ');
-    const [hours, minutes] = time.split(':');
-    
-    const date = new Date(Date.UTC(year, getMonthIndex(month), parseInt(day), parseInt(hours), parseInt(minutes)));
-    
-    // Adjust to IST (UTC+5:30)
-    date.setMinutes(date.getMinutes() + 330);
-    
-    const formattedDate = date.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-        timeZone: 'Asia/Kolkata'
-    });
-    
-    const formattedTime = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'Asia/Kolkata'
-    });
-    
-    return {
-        date: formattedDate,
-        time: `${formattedTime} IST`
-    };
-}
-
-function getMonthIndex(monthStr) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months.indexOf(monthStr);
+function convertToISO(dateStr, timeStr) {
+    const dateParts = dateStr.split(' ');
+    const day = parseInt(dateParts[0], 10);
+    const month = new Date(Date.parse(dateParts[1] +" 1, 2024")).getMonth();
+    const year = parseInt(dateParts[2], 10);
+    const timeParts = timeStr.split(' ')[1].split(':');
+    const hours = parseInt(timeParts[0], 10);
+    const minutes = parseInt(timeParts[1], 10);
+    const date = new Date(year, month, day, hours, minutes);
+    const utcDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60 * 1000));
+    return utcDate.toISOString();
 }
 
 async function scrapePage() {
@@ -59,22 +37,17 @@ async function scrapePage() {
             const date = $(row).find('td[data-colindex="2"] p:first-of-type').text().trim();
             const time = $(row).find('td[data-colindex="2"] p._grey__text_7s2sw_462').text().trim();
             const duration = $(row).find('td[data-colindex="3"] p').text().trim();
-            
-            // Convert the date and time to IST
-            const { date: istDate, time: istTime } = convertDateTimeToIST(date, time);
-            
             contests.push({
                 id: uuidv4(),
                 event,
                 resource: "https://www.codechef.com/contests",
-                date: istDate,
-                time: istTime,
+                date: convertToISO(date, time),
                 href: `https://www.codechef.com${href}`,
             });
         });
         
-        await fs.writeFile('data.json', JSON.stringify(contests, null, 2));
-        console.log('Scraping completed successfully and saved to contests.json');
+        await fs.writeFile('codechef.json', JSON.stringify(contests, null, 2));
+        console.log('Contest data of Codechef saved to data.json');
     } catch (error) {
         console.error('Error during scraping:', error);
     } finally {

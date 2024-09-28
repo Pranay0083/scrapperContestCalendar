@@ -3,7 +3,7 @@ import scrapePage from './scrape.js';
 const scraper = async () => {
     try {
         await scrapePage();
-        console.log('Scraping completed successfully!');
+        console.log('Codechef scraping completed successfully!');
     } catch (error) {
         console.error('Error during scraping:', error);
     }

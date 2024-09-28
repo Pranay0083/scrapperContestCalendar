@@ -3,57 +3,49 @@ import fs from 'fs/promises';
 import { JSDOM } from 'jsdom';
 import { v4 as uuidv4 } from 'uuid';
 
-function convertToIST(dateString) {
-    const [datePart, timePart] = dateString.split(' ');
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function convertUTCOffsetToISO(dateTimeString) {
+    // Parse the date and time components
+    const [datePart, timePart] = dateTimeString.split(' ');
     const [month, day, year] = datePart.split('/');
-    const [time, timezone] = timePart.split('UTC');
+    const [time, offsetPart] = timePart.split('UTC');
     const [hours, minutes] = time.split(':');
-    const date = new Date(Date.UTC(year, getMonthIndex(month), day, hours, minutes));
-    date.setMinutes(date.getMinutes() + 330);
-    const istTime = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'Asia/Kolkata'
-    });
-    return `${istTime} IST`;
-}
 
-function getMonthIndex(monthStr) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months.indexOf(monthStr);
-}
+    // Parse the UTC offset
+    const offsetSign = offsetPart.startsWith('-') ? -1 : 1;
+    const [offsetHours, offsetMinutes] = offsetPart.substring(1).split('.');
+    const totalOffsetMinutes = (parseInt(offsetHours) * 60 + (offsetMinutes ? parseInt(offsetMinutes) * 6 : 0)) * offsetSign;
 
-function calculateDateFromBeforeStart(dateString) {
-    const now = new Date();
-    const timeMatch = dateString.match(/(\d+):(\d+):(\d+)/);
-    const daysMatch = dateString.match(/(\d+)\s*days/);
+    // Create a Date object
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthIndex = monthNames.indexOf(month);
+    const date = new Date(Date.UTC(
+        parseInt(year),
+        monthIndex,
+        parseInt(day),
+        parseInt(hours),
+        parseInt(minutes)
+    ));
 
-    if (timeMatch) {
-        const hours = parseInt(timeMatch[1], 10);
-        const minutes = parseInt(timeMatch[2], 10);
-        const seconds = parseInt(timeMatch[3], 10);
-        now.setHours(now.getHours() + hours);
-        now.setMinutes(now.getMinutes() + minutes);
-        now.setSeconds(now.getSeconds() + seconds);
-    } else if (daysMatch) {
-        const days = parseInt(daysMatch[1], 10);
-        now.setDate(now.getDate() + days);
-    }
+    // Adjust for UTC offset
+    date.setUTCMinutes(date.getUTCMinutes() - totalOffsetMinutes);
 
-    return now.toISOString();
-}
+    // Format the result
+    const pad = (num) => num.toString().padStart(2, '0');
+    const formattedDate = `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+    const formattedTime = `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
 
-function formatDateToReadableString(isoDateString) {
-    const date = new Date(isoDateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    return `${formattedDate}T${formattedTime}.000Z`;
 }
 
 async function scrapePage() {
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://codeforces.com/contests');
+        await sleep(5000);
         const pageSource = await driver.getPageSource();
         const dom = new JSDOM(pageSource);
         const document = dom.window.document;
@@ -63,7 +55,7 @@ async function scrapePage() {
             const contestId = row.getAttribute('data-contestid');
             const event = row.querySelector('td:nth-child(1)')?.textContent.trim().replace(/\n\s+/g, '').split('»')[0].trim();
             const writers = row.querySelector('td:nth-child(2)')?.textContent.trim().split('\n').map(w => w.trim()).filter(Boolean);
-            const time = convertToIST(row.querySelector('td:nth-child(3)')?.textContent.trim());
+            const time = row.querySelector('td:nth-child(3)')?.textContent.trim();
             const length = row.querySelector('td:nth-child(4)')?.textContent.trim();
             let date = row.querySelector('td:nth-child(5)')?.textContent.trim();
             // console.log(date,time)
@@ -72,8 +64,7 @@ async function scrapePage() {
                     id: uuidv4(),
                     event,
                     resource: "https://codeforces.com/contests",
-                    date: formatDateToReadableString(calculateDateFromBeforeStart(date)),
-                    time,
+                    date: convertUTCOffsetToISO(time),
                     href: "https://codeforces.com/contests",
                 })
             }else if(date.includes("Running")){
@@ -88,8 +79,8 @@ async function scrapePage() {
             }
 
         });
-        await fs.writeFile('data.json', JSON.stringify(contests, null, 2));
-        console.log('Scraping completed successfully');
+        await fs.writeFile('codeforces.json', JSON.stringify(contests, null, 2));
+        console.log('Contest data of Codeforces saved to data.json');
     } catch (error) {
         console.error('Error during scraping:', error);
     } finally {

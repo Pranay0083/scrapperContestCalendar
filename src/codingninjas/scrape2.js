@@ -7,26 +7,54 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function getDaysBetweenDates(startTime, endTime) {
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
-    if (isNaN(startDate) || isNaN(endDate)) {
-        return 'Invalid date';
+function parseDateString(dateString) {
+    const pad = (num) => num.toString().padStart(2, '0');
+    let date;
+    const dateTimeRegex = /^(\d{2}) (\w{3}) (\d{4}) @(\d{2}):(\d{2}) (AM|PM) IST$/;
+    const matchDateTime = dateString.match(dateTimeRegex);
+    if (matchDateTime) {
+        const [_, day, month, year, hour, minute, period] = matchDateTime;
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIndex = monthNames.indexOf(month);
+        let hour24 = parseInt(hour, 10);
+        if (period === "PM" && hour24 !== 12) hour24 += 12;
+        if (period === "AM" && hour24 === 12) hour24 = 0;
+        date = new Date(Date.UTC(parseInt(year), monthIndex, parseInt(day), hour24, parseInt(minute), 0));
+    }
+    else if (dateString.startsWith("Starts in")) {
+        const relativeDays = parseInt(dateString.match(/Starts in (\d+) days/)[1], 10);
+        date = new Date(); // Current date
+        date.setUTCDate(date.getUTCDate() + relativeDays);
+    }
+    else if (/^\d{2}-\w{3}, \d{4}$/.test(dateString)) {
+        const [dayMonth, year] = dateString.split(', ');
+        const [day, month] = dayMonth.split('-');
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const monthIndex = monthNames.indexOf(month);
+        if (monthIndex === -1) {
+            console.error(`Invalid month: ${month}`);
+            return null;
+        }
+        date = new Date(Date.UTC(parseInt(year), monthIndex, parseInt(day)));
+    } else {
+        return null;
     }
 
-    const timeDifference = endDate - startDate;
-    return timeDifference / (1000 * 60 * 60 * 24); // Convert milliseconds to days
-}
+    if (isNaN(date.getTime())) {
+        console.error(`Invalid date constructed: ${date}`);
+        return null;
+    }
 
-function formatDate(input) {
-    const [dayMonth, year] = input.split(', '); // Split into day and month part
-    const [day, monthAbbr] = dayMonth.split('-'); // Split into day and month abbreviation
-
-    // Create a new date object using the month abbreviation and year
-    const date = new Date(`${monthAbbr} ${day}, ${year}`);
-
-    // Return the formatted date as "Month Day, Year"
-    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const year = date.getUTCFullYear();
+    const month = pad(date.getUTCMonth() + 1);
+    const day = pad(date.getUTCDate());
+    const hours = pad(date.getUTCHours());
+    const minutes = pad(date.getUTCMinutes());
+    const seconds = pad(date.getUTCSeconds());
+    const some = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
+    const some2 = new Date(dateString);
+    const now = new Date();
+    return some2 < now ? "Live Now" : some;
 }
 
 async function scrapePage() {
@@ -42,15 +70,13 @@ async function scrapePage() {
             const name = $(header).find('.zen-typo-nav').text().trim();
             const startTime = $(header).next('.challenge-body').find('.challenge-timeline-start .zen-typo-caption-bold').text().trim();
             const endTime = $(header).next('.challenge-body').find('.challenge-timeline-end .zen-typo-caption-bold').text().trim();
-            
+
             if (name && startTime && endTime) {
-                const duration = getDaysBetweenDates(startTime, endTime);
                 return {
                     id: uuidv4(),
                     event: name,
                     resource: 'https://www.naukri.com/code360/challenges',
-                    start: formatDate(startTime),
-                    time: duration + " days",
+                    start: parseDateString(startTime),
                     href: 'https://www.naukri.com/code360/challenges',
                 };
             }
@@ -61,7 +87,7 @@ async function scrapePage() {
         // Read the existing data from the 'data.json' file
         let existingData = [];
         try {
-            const fileData = await fs.readFile('data.json', 'utf-8');
+            const fileData = await fs.readFile('codingninjas.json', 'utf-8');
             existingData = JSON.parse(fileData); // Parse the existing data
         } catch (error) {
             console.warn('No existing data found, starting with an empty array.');
@@ -71,8 +97,8 @@ async function scrapePage() {
         const updatedData = [...existingData, ...filteredChallenges];
 
         // Save the updated data back to 'challenges.json'
-        await fs.writeFile('data.json', JSON.stringify(updatedData, null, 2));
-        console.log("Challenges data saved successfully!");
+        await fs.writeFile('codingninjas.json', JSON.stringify(updatedData, null, 2));
+        console.log('Challanges data of Coding Ninjas saved to data.json');
     } catch (error) {
         console.error("Error during scraping:", error);
     } finally {

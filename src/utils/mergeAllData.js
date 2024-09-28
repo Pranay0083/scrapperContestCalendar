@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { sortEvents } from './sortData.js'; // Import with .js extension and named export
+import { sortEventsByDate } from './sortData.js'; // Import with .js extension and named export
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -9,10 +9,11 @@ const __dirname = path.dirname(__filename);
 
 const mergeAllData = async () => {
     const platforms = ["leetcode", "geeksforgeeks", "codingninjas", "codeforces", "atcoder", "codechef"];
+
     const data = [];
 
     for (let platform of platforms) {
-        const filePath = path.resolve(__dirname, `../${platform}/data.json`);
+        const filePath = path.resolve(__dirname, `../../${platform}.json`);
         try {
             let fileData = await fs.readFile(filePath, 'utf-8');
             fileData = JSON.parse(fileData);
@@ -25,14 +26,13 @@ const mergeAllData = async () => {
         }
     }
 
-    const sortedData = sortEvents(data);
-    console.log("me")
+    const sortedData = sortEventsByDate(data);
     const time = Date.now();
     const dataPath = path.resolve(__dirname, `../data/data${time}.json`);
 
     try {
         await fs.writeFile(dataPath, JSON.stringify(sortedData, null, 2));
-        return `data${time}.json`;
+        return `Your data is stored in data${time}.json`;
     } catch (err) {
         console.error('Error writing sorted data to file:', err);
         return false;

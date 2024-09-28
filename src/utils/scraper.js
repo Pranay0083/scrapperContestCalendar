@@ -5,13 +5,10 @@ import mergeAllData from './mergeAllData.js';
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const scraper = async () => {
-    const platforms = ["leetcode", "geeksforgeeks", "codingninjas", "codeforces", "atcoder", "codechef"];
-    
+    const platforms = ["leetcode", "geeksforgeeks", "codingninjas", "codeforces", "codechef", "atcoder"];
     for (let platform of platforms) {
         const filePath = path.resolve(__dirname, `../${platform}/index.js`);
         const { default: scraperModule } = await import(filePath);
-        
-        // Call the scraper function from the module if it exists
         if (typeof scraperModule === 'function') {
             await scraperModule();
         }

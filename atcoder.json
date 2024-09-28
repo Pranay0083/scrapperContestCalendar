@@ -1,66 +1,65 @@
 [
   {
-    "id": "64822bfc-0491-4d41-a13b-4c62dac6c781",
+    "id": "249cb513-9f55-45db-84f7-8fa843ad02e4",
     "event": "AtCoder Beginner Contest 373",
     "resource": "https://atcoder.jp/",
-    "date": "September 29, 2024",
-    "time": "04:30 AM IST",
+    "date": "2024-09-28T17:30:00.000Z",
     "href": "https://atcoder.jp/contests/abc373"
   },
   {
-    "id": "97258596-ee68-4f89-b4ac-9dfd2e211365",
+    "id": "8feabac3-55ea-4181-8926-d75a8534316c",
     "event": "AtCoder Grand Contest 068",
     "resource": "https://atcoder.jp/",
-    "date": "September 30, 2024",
-    "time": "04:30 AM IST",
+    "date": "2024-09-29T17:30:00.000Z",
     "href": "https://atcoder.jp/contests/agc068"
   },
   {
-    "id": "596826e1-6f94-4fd3-a2c6-ad3420d25c84",
+    "id": "b4bfb88a-3685-4e38-bcdb-16f9f9a64e10",
     "event": "Toyota Programming Contest 2024#10（AtCoder Heuristic Contest 038）",
     "resource": "https://atcoder.jp/",
-    "date": "October 5, 2024",
-    "time": "02:30 AM IST",
+    "date": "2024-10-04T15:30:00.000Z",
     "href": "https://atcoder.jp/contests/ahc038"
   },
   {
-    "id": "711b130f-2a10-465d-b220-7b3c3a14a0bf",
+    "id": "75588984-8e4b-4d58-922a-9954f7f7fa3a",
     "event": "KEYENCE Programming Contest 2024（AtCoder Beginner Contest 374）",
     "resource": "https://atcoder.jp/",
-    "date": "October 6, 2024",
-    "time": "04:30 AM IST",
+    "date": "2024-10-05T17:30:00.000Z",
     "href": "https://atcoder.jp/contests/abc374"
   },
   {
-    "id": "b36fdad0-90d3-4d54-aa96-2e183c3ef1c3",
+    "id": "f18f1e27-3397-4af0-830a-34683ceb5e68",
     "event": "Panasonic Programming Contest 2024（AtCoder Beginner Contest 375）",
     "resource": "https://atcoder.jp/",
-    "date": "October 13, 2024",
-    "time": "04:30 AM IST",
+    "date": "2024-10-12T17:30:00.000Z",
     "href": "https://atcoder.jp/contests/abc375"
   },
   {
-    "id": "1b53d7ab-84be-45b5-ae96-daca9f01db1b",
+    "id": "89ae9c9b-a23e-43c8-b38b-2d5b48aa975e",
     "event": "AtCoder Beginner Contest 376",
     "resource": "https://atcoder.jp/",
-    "date": "October 20, 2024",
-    "time": "04:30 AM IST",
+    "date": "2024-10-19T17:30:00.000Z",
     "href": "https://atcoder.jp/contests/abc376"
   },
   {
-    "id": "d344a38f-5109-47bd-8285-f55efba97abf",
+    "id": "71ad4c33-a52b-4677-af88-38deb79cad3e",
     "event": "TOYOTA SYSTEMS Programming Contest 2024（AtCoder Beginner Contest 377)",
     "resource": "https://atcoder.jp/",
-    "date": "October 27, 2024",
-    "time": "04:30 AM IST",
+    "date": "2024-10-26T17:30:00.000Z",
     "href": "https://atcoder.jp/contests/abc377"
   },
   {
-    "id": "9a5c4621-f393-4b37-b00a-6498a26eaa7d",
+    "id": "874ae6f8-99e3-401c-bb4a-f746648c83ed",
+    "event": "AtCoder Regular Contest 186",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-10-27T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/arc186"
+  },
+  {
+    "id": "054507d4-595e-4e86-896a-770fee5a119a",
     "event": "The 2nd Masters Championship-qual-",
     "resource": "https://atcoder.jp/",
-    "date": "March 2, 2025",
-    "time": "08:30 PM IST",
+    "date": "2025-03-02T09:30:00.000Z",
     "href": "https://atcoder.jp/contests/masters2025-qual"
   }
 ]
