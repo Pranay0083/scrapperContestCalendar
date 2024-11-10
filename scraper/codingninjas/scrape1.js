@@ -1,63 +1,54 @@
 import { load } from 'cheerio';
+import chrome from 'selenium-webdriver/chrome.js';
 import { Builder, Browser } from 'selenium-webdriver';
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
-import Contest from '../../models/Contest.js'; // Ensure the path is correct
+import Contest from '../../models/Contest.js';
+
+const options = new chrome.Options();
+options.addArguments('--headless=new'); // Run Chrome in headless mode
+options.addArguments('--disable-gpu');
+options.addArguments('--no-sandbox');
+options.addArguments('--disable-dev-shm-usage');
+options.addArguments('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36');
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function parseDateString(dateString) {
-    // Helper function to pad numbers to two digits
     const pad = (num) => num.toString().padStart(2, '0');
-
     let date;
-
-    // Handle absolute date like "03 Oct 2024 @08:00 PM IST"
     const dateTimeRegex = /^(\d{2}) (\w{3}) (\d{4}) @(\d{2}):(\d{2}) (AM|PM) IST$/;
     const matchDateTime = dateString.match(dateTimeRegex);
-
     if (matchDateTime) {
         const [_, day, month, year, hour, minute, period] = matchDateTime;
-
-        // Convert month name to number (0-11)
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const monthIndex = monthNames.indexOf(month);
-
-        // Adjust hour for AM/PM format
         let hour24 = parseInt(hour, 10);
         if (period === "PM" && hour24 !== 12) hour24 += 12;
         if (period === "AM" && hour24 === 12) hour24 = 0;
-
-        // Create a Date object
         date = new Date(Date.UTC(parseInt(year), monthIndex, parseInt(day), hour24, parseInt(minute), 0));
-    }
-    // Handle relative date like "Starts in 4 days"
-    else if (dateString.startsWith("Starts in")) {
+    } else if (dateString.startsWith("Starts in")) {
         const relativeDays = parseInt(dateString.match(/Starts in (\d+) days/)[1], 10);
-        date = new Date(); // Current date
+        date = new Date();
         date.setUTCDate(date.getUTCDate() + relativeDays);
     } else {
-        return null; // Invalid format
+        return null;
     }
-
-    // Convert date to ISO 8601 format with 'Z' (UTC timezone)
     const year = date.getUTCFullYear();
-    const month = pad(date.getUTCMonth() + 1); // Months are 0-indexed in JavaScript
+    const month = pad(date.getUTCMonth() + 1);
     const day = pad(date.getUTCDate());
     const hours = pad(date.getUTCHours());
     const minutes = pad(date.getUTCMinutes());
     const seconds = pad(date.getUTCSeconds());
-
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
 }
 
 async function scrapePage() {
-    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    const dbURI = process.env.MONGODB_URI;
     await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
     try {
         await driver.get('https://www.naukri.com/code360/contests');
         await sleep(10000);
@@ -65,18 +56,24 @@ async function scrapePage() {
         const $ = load(pageSource);
         const contestData = [];
         const ratedContestInfoHtml = $('.rated-contest-info').html();
-        const ratedContestInfo = load(ratedContestInfoHtml);
-        const contestCards = ratedContestInfo('.rated-contest-card');
-        contestCards.each((index, element) => {
-            const title = ratedContestInfo(element).find('.contest-title').text().trim();
-            const startTime = ratedContestInfo(element).find('.contest-timing').text().trim();
-            contestData.push({
-                event: title,
-                resource: "https://www.naukri.com/code360/contests",
-                date: parseDateString(startTime),
-                href: "https://www.naukri.com/code360/contests",
+
+        if (!ratedContestInfoHtml) {
+            console.error("No rated-contest-info found.");
+        } else {
+            const ratedContestInfo = load(ratedContestInfoHtml);
+            const contestCards = ratedContestInfo('.rated-contest-card');
+            contestCards.each((index, element) => {
+                const title = ratedContestInfo(element).find('.contest-title').text().trim();
+                const startTime = ratedContestInfo(element).find('.contest-timing').text().trim();
+                contestData.push({
+                    event: title,
+                    resource: "https://www.naukri.com/code360/contests",
+                    date: parseDateString(startTime),
+                    href: "https://www.naukri.com/code360/contests",
+                });
             });
-        });
+        }
+
         const liveAndUpcomingContests = $('.card-body.ng-star-inserted');
         liveAndUpcomingContests.each((index, element) => {
             const contestCard = $(element);
@@ -98,10 +95,10 @@ async function scrapePage() {
                     date: parseDateString(startTime),
                 });
             }
-
         });
 
         // Save each contest to MongoDB
+        console.log(contestData.length)
         await Contest.insertMany(contestData);
         console.log('Contest data of Coding Ninjas saved to MongoDB');
     } catch (error) {

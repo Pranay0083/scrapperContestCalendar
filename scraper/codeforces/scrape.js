@@ -1,4 +1,6 @@
 import { Builder, Browser } from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome.js'
+const options = new chrome.Options();
 import mongoose from 'mongoose';
 import { JSDOM } from 'jsdom';
 import { v4 as uuidv4 } from 'uuid';
@@ -46,7 +48,7 @@ async function scrapePage() {
     const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
     await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options.addArguments('--headless=new')).build();
     try {
         await driver.get('https://codeforces.com/contests');
         await sleep(5000);
@@ -62,7 +64,6 @@ async function scrapePage() {
             const time = row.querySelector('td:nth-child(3)')?.textContent.trim();
             const length = row.querySelector('td:nth-child(4)')?.textContent.trim();
             let date = row.querySelector('td:nth-child(5)')?.textContent.trim();
-            // console.log(date,time)
             if (date !== "Final standings" && date.includes("Before")) {
                 contests.push({
                     event,
@@ -79,10 +80,10 @@ async function scrapePage() {
                     href: "https://codeforces.com/contests",
                 })
             }
-
         });
 
         // Save each contest to MongoDB
+        console.log(contests.length)
         await Contest.insertMany(contests);
         console.log('Contest data of Codeforces saved to MongoDB');
     } catch (error) {

@@ -1,5 +1,7 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome.js'
+const options = new chrome.Options();
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import Contest from '../../models/Contest.js'; // Ensure the path is correct
@@ -39,7 +41,7 @@ async function scrapePage() {
     const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
     await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options.addArguments('--headless=new')).build();
     try {
         await driver.get('https://www.naukri.com/code360/events?selected_tab=Coding%20events');
         await sleep(10000); // Wait for the page to load
@@ -59,6 +61,7 @@ async function scrapePage() {
         });
 
         // Save each contest to MongoDB
+        console.log(contestData.length)
         await Contest.insertMany(contestData);
         console.log('Contest data of Naukri saved to MongoDB');
     } catch (error) {

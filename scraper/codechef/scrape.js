@@ -1,5 +1,7 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome.js'
+const options = new chrome.Options();
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import Contest from '../../models/Contest.js'; // Ensure the path is correct
@@ -25,7 +27,7 @@ async function scrapePage() {
     const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
     await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+    let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options.addArguments('--headless=new')).build();
     try {
         await driver.get('https://www.codechef.com/contests');
         await sleep(10000);
@@ -50,6 +52,7 @@ async function scrapePage() {
         });
 
         // Save each contest to MongoDB
+        console.log(contests.length)
         await Contest.insertMany(contests);
         console.log('Contest data of Codechef saved to MongoDB');
     } catch (error) {
