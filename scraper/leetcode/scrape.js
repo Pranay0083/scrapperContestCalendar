@@ -1,6 +1,11 @@
 import { Builder, Browser } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js'
 const options = new chrome.Options();
+options.addArguments('--headless=new'); // Run Chrome in headless mode
+options.addArguments('--disable-gpu');
+options.addArguments('--no-sandbox');
+options.addArguments('--disable-dev-shm-usage');
+options.addArguments('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36');
 import mongoose from 'mongoose';
 import { JSDOM } from 'jsdom';
 import { v4 as uuidv4 } from 'uuid';
