@@ -1,0 +1,226 @@
+[
+  {
+    "id": "deddf163-af48-48a3-b9db-40399e0473a8",
+    "resource": "https://www.naukri.com/code360/contests",
+    "href": "https://www.naukri.com/code360/contests",
+    "event": "Binary Search Contest",
+    "date": "Live Now"
+  },
+  {
+    "id": "8d87890b-c151-4f10-aeef-b1afc729b247",
+    "resource": "https://www.naukri.com/code360/contests",
+    "href": "https://www.naukri.com/code360/contests",
+    "event": "Array Contest",
+    "date": "Live Now"
+  },
+  {
+    "id": "3bb11768-1b5f-46c1-b0cd-352de34bdf7a",
+    "resource": "https://www.naukri.com/code360/contests",
+    "href": "https://www.naukri.com/code360/contests",
+    "event": "DP Contest",
+    "date": "Live Now"
+  },
+  {
+    "id": "4fcf0ba4-7941-4519-ae6d-69af39b92649",
+    "event": "7 Day Beginners Challenge - 21",
+    "resource": "https://www.naukri.com/code360/challenges",
+    "start": "Live Now",
+    "href": "https://www.naukri.com/code360/challenges"
+  },
+  {
+    "id": "31f1c26e-6be6-42af-aff5-9d24f0d69388",
+    "event": "7 Day Challenge - Graphs (Medium)",
+    "resource": "https://www.naukri.com/code360/challenges",
+    "start": "Live Now",
+    "href": "https://www.naukri.com/code360/challenges"
+  },
+  {
+    "id": "b13c77c9-3d52-40e2-bbc5-ccdbf726fd3c",
+    "event": "Company Based Challenge - Adobe",
+    "resource": "https://www.naukri.com/code360/challenges",
+    "start": "Live Now",
+    "href": "https://www.naukri.com/code360/challenges"
+  },
+  {
+    "id": "ea524721-8aff-4750-88a9-dee67b7ded87",
+    "event": "GfG Weekly - 180 [Rated Contest]",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-10T08:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/gfg-weekly-180-rated-contest"
+  },
+  {
+    "id": "ff9e48b2-f0a9-4277-bb8c-7724b0b773b7",
+    "event": "Neither of Code",
+    "resource": "https://www.naukri.com/code360/events?selected_tab=Coding%20events",
+    "date": "2024-11-10T10:23:01.000Z",
+    "href": "https://www.naukri.com/code360/events?selected_tab=Coding%20events"
+  },
+  {
+    "id": "f0e024ff-26f9-43e5-a234-92ac44a3ee6d",
+    "event": "Codeforces Round 986 (Div. 2)",
+    "resource": "https://codeforces.com/contests",
+    "date": "2024-11-10T15:35:00.000Z",
+    "href": "https://codeforces.com/contests"
+  },
+  {
+    "id": "6108ec57-b4cc-4fc6-99f2-8a1d6c487eda",
+    "event": "Innovate X Coding Challenge || Dr Ambedkar Instit....",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-11T08:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/innovate-x-coding-challenge"
+  },
+  {
+    "id": "019358af-b1ca-41ed-bd89-61672adb738e",
+    "resource": "https://www.naukri.com/code360/contests",
+    "href": "https://www.naukri.com/code360/contests",
+    "event": "Beginner Contest 73",
+    "date": "2024-11-13T07:22:37.000Z"
+  },
+  {
+    "id": "08ffa38e-7ff0-4e00-835c-ff1d5a5808c1",
+    "event": "Starters 160",
+    "resource": "https://www.codechef.com/contests",
+    "date": "2024-11-13T20:00:00.000Z",
+    "href": "https://www.codechef.comhttps://www.codechef.com/START160"
+  },
+  {
+    "id": "220e149d-e785-476a-b65c-398ed10cc579",
+    "event": "2024-2025 ICPC, NERC, Southern and Volga Russian Regional Contest (Unrated, Online Mirror, ICPC Rules, Preferably Teams)",
+    "resource": "https://codeforces.com/contests",
+    "date": "2024-11-14T10:35:00.000Z",
+    "href": "https://codeforces.com/contests"
+  },
+  {
+    "id": "53b365af-da87-498d-8561-4a6912eb5962",
+    "event": "Weekly Contest 152",
+    "resource": "https://www.naukri.com/code360/contests",
+    "date": "2024-11-14T20:00:00.000Z",
+    "href": "https://www.naukri.com/code360/contests"
+  },
+  {
+    "id": "b55944f6-fa35-4da5-8ae8-7f454845f173",
+    "event": "Codeforces Round (Div. 2)",
+    "resource": "https://codeforces.com/contests",
+    "date": "2024-11-15T12:35:00.000Z",
+    "href": "https://codeforces.com/contests"
+  },
+  {
+    "id": "8657f2f0-3144-4d1b-b3b6-6e34096e781d",
+    "event": "AtCoder Beginner Contest 380",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-16T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/abc380"
+  },
+  {
+    "id": "a57dd2d5-0800-4629-8e37-0048cbe60bb6",
+    "event": "Weekly Contest 424",
+    "resource": "https://leetcode.com/",
+    "date": "2024-11-17T02:30:00.337Z",
+    "href": "https://leetcode.com/contest/weekly-contest-424"
+  },
+  {
+    "id": "fc4dc774-7305-4446-b721-e08abcdb94a4",
+    "event": "GfG Weekly - 181 [Rated Contest]",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-17T08:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/gfg-weekly-181-rated-contest"
+  },
+  {
+    "id": "87f1cee9-4684-4d19-9a14-ee2129f4886a",
+    "event": "Codeforces Round (Div. 3)",
+    "resource": "https://codeforces.com/contests",
+    "date": "2024-11-17T14:35:00.000Z",
+    "href": "https://codeforces.com/contests"
+  },
+  {
+    "id": "35f5eb7b-96c5-47ed-9bee-ea6aebeefb92",
+    "event": "AtCoder Regular Contest 187",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-17T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/arc187"
+  },
+  {
+    "id": "5330e6d6-1432-4271-87e6-6a0e925ee98a",
+    "event": "Starters 161",
+    "resource": "https://www.codechef.com/contests",
+    "date": "2024-11-20T20:00:00.000Z",
+    "href": "https://www.codechef.comhttps://www.codechef.com/START161"
+  },
+  {
+    "id": "561024bd-a8bf-4fc3-923d-d5cf8cf1497b",
+    "event": "Job-A-Thon 39 Hiring Challenge",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-21T09:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/job-a-thon-39-hiring-challenge"
+  },
+  {
+    "id": "63191bc6-4bad-45e9-ad74-4a5074040f6f",
+    "event": "JSS Academy of Technical Education",
+    "resource": "https://www.naukri.com/code360/events?selected_tab=Coding%20events",
+    "date": "2024-11-22T00:00:00.000Z",
+    "href": "https://www.naukri.com/code360/events?selected_tab=Coding%20events"
+  },
+  {
+    "id": "668a667c-a098-4941-abed-e59e9e33f385",
+    "event": "AtCoder Beginner Contest 381",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-22T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/abc381"
+  },
+  {
+    "id": "3d2fe41b-19de-4300-8aa1-a07160306c31",
+    "event": "Biweekly Contest 144",
+    "resource": "https://leetcode.com/",
+    "date": "2024-11-23T14:30:00.337Z",
+    "href": "https://leetcode.com/contest/biweekly-contest-144"
+  },
+  {
+    "id": "8310078c-3bd6-456f-9ab4-a652c0808c9f",
+    "event": "estie Programming Contest 2024 (AtCoder Regular Contest 188)",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-23T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/arc188"
+  },
+  {
+    "id": "685e348e-f16b-4bc4-8dc5-dd26a9933418",
+    "event": "AtCoder Grand Contest 069",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-24T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/agc069"
+  },
+  {
+    "id": "2edf78de-2eb1-4d7e-980b-db5d3541b15b",
+    "event": "HACK TO THE FUTURE 2025  (AtCoder Heuristic Contest 040)",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-29T15:30:00.000Z",
+    "href": "https://atcoder.jp/contests/ahc040"
+  },
+  {
+    "id": "b57c0873-2428-4b15-b2e6-cb9039a28160",
+    "event": "Codeforces Round (Div. 1 + Div. 2)",
+    "resource": "https://codeforces.com/contests",
+    "date": "2024-11-30T14:35:00.000Z",
+    "href": "https://codeforces.com/contests"
+  },
+  {
+    "id": "038196b2-d406-47be-8c6d-5bcccd81b6c3",
+    "event": "AtCoder Beginner Contest 382",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-11-30T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/abc382"
+  },
+  {
+    "id": "8a6c6b57-5e32-498c-ad93-c8f88967644c",
+    "event": "Daiwa Securities Co. Ltd. Programming Contest 2024（AtCoder Beginner Contest 383）",
+    "resource": "https://atcoder.jp/",
+    "date": "2024-12-07T17:30:00.000Z",
+    "href": "https://atcoder.jp/contests/abc383"
+  },
+  {
+    "id": "1f2f3b68-fe98-4b70-98a9-108a348577ce",
+    "event": "The 2nd Masters Championship-qual-",
+    "resource": "https://atcoder.jp/",
+    "date": "2025-03-02T09:30:00.000Z",
+    "href": "https://atcoder.jp/contests/masters2025-qual"
+  }
+]
