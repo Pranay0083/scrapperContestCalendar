@@ -3,10 +3,12 @@ import dotenv from 'dotenv';
 import connectDB from '../config/db.js';
 import scraper from '../scraper/scraper.js';
 import Contest from '../models/Contest.js';
+import cors from 'cors'
 
 dotenv.config();
 
 const app = express();
+app.use(cors())
 const PORT = process.env.PORT || 3000;
 
 connectDB();
