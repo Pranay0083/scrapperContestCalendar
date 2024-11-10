@@ -1,0 +1,30 @@
+[
+  {
+    "id": "a28404ec-6a2b-465c-a49b-bef57a6ba8de",
+    "event": "GfG Weekly - 180 [Rated Contest]",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-10T08:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/gfg-weekly-180-rated-contest"
+  },
+  {
+    "id": "7246887c-d00d-400c-af9e-2c3d3a74b4ce",
+    "event": "Innovate X Coding Challenge || Dr Ambedkar Instit....",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-11T08:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/innovate-x-coding-challenge"
+  },
+  {
+    "id": "9609a2f0-18b0-4d7d-b8c8-04bb51b8c9a3",
+    "event": "GfG Weekly - 181 [Rated Contest]",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-17T08:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/gfg-weekly-181-rated-contest"
+  },
+  {
+    "id": "3a8f88fa-8112-45b0-a558-ede4a6b02df6",
+    "event": "Job-A-Thon 39 Hiring Challenge",
+    "resource": "https://www.geeksforgeeks.org/events",
+    "date": "2024-11-21T09:00:00.000Z",
+    "href": "https://practice.geeksforgeeks.org/contest/job-a-thon-39-hiring-challenge"
+  }
+]

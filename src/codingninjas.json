@@ -1,79 +1,72 @@
 [
   {
-    "id": "03ef30b8-8bfc-4474-9cff-f32c9034b0fe",
-    "event": "Weekly Contest 146",
+    "id": "b1ecdbb7-1b5b-4425-af40-5ab4a95c60c8",
+    "event": "Weekly Contest 152",
     "resource": "https://www.naukri.com/code360/contests",
-    "date": "2024-10-03T20:00:00.000Z",
+    "date": "2024-11-14T20:00:00.000Z",
     "href": "https://www.naukri.com/code360/contests"
   },
   {
-    "id": "0b2e2581-4770-4edf-ba20-a1a801c131b4",
+    "id": "ac99c803-8fe9-470f-86f5-98f90a9d6003",
     "resource": "https://www.naukri.com/code360/contests",
     "href": "https://www.naukri.com/code360/contests",
     "event": "Binary Search Contest",
     "date": "Live Now"
   },
   {
-    "id": "a9407116-4ab8-40df-9c57-0753f6289142",
+    "id": "b95cdd20-70b0-4137-a4bb-3f211f8dd450",
     "resource": "https://www.naukri.com/code360/contests",
     "href": "https://www.naukri.com/code360/contests",
     "event": "Array Contest",
     "date": "Live Now"
   },
   {
-    "id": "719333aa-e12a-4317-996b-fa1dc92a9568",
+    "id": "71f80417-dde7-442c-ab95-c5a9a1308fb7",
     "resource": "https://www.naukri.com/code360/contests",
     "href": "https://www.naukri.com/code360/contests",
     "event": "DP Contest",
     "date": "Live Now"
   },
   {
-    "id": "be85c406-1a9a-4783-9e5a-38657d6f9c46",
+    "id": "f4571dd0-e65d-453a-a736-cbaac8b4b52e",
     "resource": "https://www.naukri.com/code360/contests",
     "href": "https://www.naukri.com/code360/contests",
-    "event": "Data Analyst Hiring Test 2024",
-    "date": "Live Now"
+    "event": "Beginner Contest 73",
+    "date": "2024-11-13T07:08:15.000Z"
   },
   {
-    "id": "6b9efeff-934c-4e2d-9261-adf478358029",
-    "resource": "https://www.naukri.com/code360/contests",
-    "href": "https://www.naukri.com/code360/contests",
-    "event": "Beginner Contest 70",
-    "date": "2024-10-02T09:02:42.000Z"
-  },
-  {
-    "id": "b06ae6e8-1904-4127-9a30-4041284f254f",
-    "event": "7 Day Beginners Challenge - 14",
+    "id": "c7e46abd-1fe8-42b4-95bf-3e3b56d07ee8",
+    "event": "7 Day Beginners Challenge - 21",
     "resource": "https://www.naukri.com/code360/challenges",
     "start": "Live Now",
     "href": "https://www.naukri.com/code360/challenges"
   },
   {
-    "id": "1970639f-6f7f-4b0a-9355-284fdb95b973",
-    "event": "Company Based Challenge - Infosys",
+    "id": "39b0cd9d-1d57-44e0-81d0-38ebf31ec900",
+    "event": "7 Day Challenge - Graphs (Medium)",
     "resource": "https://www.naukri.com/code360/challenges",
     "start": "Live Now",
     "href": "https://www.naukri.com/code360/challenges"
   },
   {
-    "id": "538aaeac-0f02-4801-8491-f87aea4d9a6c",
-    "event": "7 Day Challenge - Backtracking",
+    "id": "4af1b4f6-5481-4c62-8e77-1a139a0bd33f",
+    "event": "Company Based Challenge - Adobe",
     "resource": "https://www.naukri.com/code360/challenges",
     "start": "Live Now",
     "href": "https://www.naukri.com/code360/challenges"
   },
   {
-    "id": "9fce79af-00b1-49a7-a369-e1841f91436e",
-    "event": "Code Clash 1.0 | CSE Third Year Chandigarh University",
+    "id": "be3a21d9-19e6-4312-93c0-8d326a5f1ff9",
+    "event": "Neither of Code",
     "resource": "https://www.naukri.com/code360/events?selected_tab=Coding%20events",
-    "date": "2024-09-28T12:03:06.000Z",
+    "date": "2024-11-10T10:08:39.000Z",
     "href": "https://www.naukri.com/code360/events?selected_tab=Coding%20events"
   },
   {
-    "id": "d232f9cd-d791-49cb-9634-01d0cbe4a456",
-    "event": "CodeFest",
+    "id": "1850c541-7100-4392-b74d-6b23b8435561",
+    "event": "JSS Academy of Technical Education",
     "resource": "https://www.naukri.com/code360/events?selected_tab=Coding%20events",
-    "date": "2024-10-10T00:00:00.000Z",
+    "date": "2024-11-22T00:00:00.000Z",
     "href": "https://www.naukri.com/code360/events?selected_tab=Coding%20events"
   }
 ]

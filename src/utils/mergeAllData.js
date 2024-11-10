@@ -1,9 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { sortEventsByDate } from './sortData.js'; // Import with .js extension and named export
+import { sortEventsByDate } from './sortData.js';
 
-// Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
