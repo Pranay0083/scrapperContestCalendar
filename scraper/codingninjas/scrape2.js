@@ -1,7 +1,8 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -54,10 +55,14 @@ function parseDateString(dateString) {
     const some = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
     const some2 = new Date(dateString);
     const now = new Date();
-    return some2 < now ? "Live Now" : some;
+    // return some2 < now ? "Live Now" : some;
+    return some
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://www.naukri.com/code360/challenges');
@@ -73,36 +78,25 @@ async function scrapePage() {
 
             if (name && startTime && endTime) {
                 return {
-                    id: uuidv4(),
                     event: name,
                     resource: 'https://www.naukri.com/code360/challenges',
-                    start: parseDateString(startTime),
+                    date: parseDateString(startTime),
                     href: 'https://www.naukri.com/code360/challenges',
                 };
             }
         });
 
-        const filteredChallenges = challenges.filter(Boolean); // Remove undefined values
+        var filteredChallenges = challenges.filter(Boolean); // Remove undefined values
 
-        // Read the existing data from the 'data.json' file
-        let existingData = [];
-        try {
-            const fileData = await fs.readFile('codingninjas.json', 'utf-8');
-            existingData = JSON.parse(fileData); // Parse the existing data
-        } catch (error) {
-            console.warn('No existing data found, starting with an empty array.');
-        }
-
-        // Combine the existing data with the new challenges
-        const updatedData = [...existingData, ...filteredChallenges];
-
-        // Save the updated data back to 'challenges.json'
-        await fs.writeFile('codingninjas.json', JSON.stringify(updatedData, null, 2));
-        console.log('Challanges data of Coding Ninjas saved to data.json');
+        // Save each challenge to MongoDB
+        await Contest.insertMany(filteredChallenges);
+        console.log('Challenges data of Naukri saved to MongoDB');
     } catch (error) {
+        console.log(filteredChallenges)
         console.error("Error during scraping:", error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

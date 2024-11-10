@@ -1,7 +1,8 @@
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { JSDOM } from 'jsdom';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -29,8 +30,10 @@ function convertToISO(input) {
     }
 }
 
-
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://leetcode.com/contest/');
@@ -47,7 +50,6 @@ async function scrapePage() {
                 const contestStartInfo = card.querySelector('div.flex.items-center')?.textContent.trim();
                 if (contestName && contestStartInfo && convertToISO(contestStartInfo)) {
                     contests.push({
-                        id: uuidv4(),
                         event: contestName,
                         resource: "https://leetcode.com/",
                         date: convertToISO(contestStartInfo),
@@ -55,8 +57,10 @@ async function scrapePage() {
                     });
                 }
             });
-            await fs.writeFile('leetcode.json', JSON.stringify(contests, null, 2));
-            console.log('Contest data of Leetcode saved to data.json');
+
+            // Save each contest to MongoDB
+            await Contest.insertMany(contests);
+            console.log('Contest data of Leetcode saved to MongoDB');
         } catch (error) {
             console.error('Error:', error);
         }
@@ -64,6 +68,7 @@ async function scrapePage() {
         console.error('Error during scraping:', error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

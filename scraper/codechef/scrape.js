@@ -1,7 +1,8 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -21,6 +22,9 @@ function convertToISO(dateStr, timeStr) {
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://www.codechef.com/contests');
@@ -29,7 +33,7 @@ async function scrapePage() {
         const $ = load(pageSource);
         const targetDiv = $('div._table__container_7s2sw_344._dark_7s2sw_247').first();
         const contests = [];
-        
+
         targetDiv.find('tbody tr').each((i, row) => {
             const id = $(row).find('td[data-colindex="0"] p').text().trim();
             const event = $(row).find('td[data-colindex="1"] a span').text().trim();
@@ -38,20 +42,21 @@ async function scrapePage() {
             const time = $(row).find('td[data-colindex="2"] p._grey__text_7s2sw_462').text().trim();
             const duration = $(row).find('td[data-colindex="3"] p').text().trim();
             contests.push({
-                id: uuidv4(),
                 event,
                 resource: "https://www.codechef.com/contests",
                 date: convertToISO(date, time),
                 href: `https://www.codechef.com${href}`,
             });
         });
-        
-        await fs.writeFile('codechef.json', JSON.stringify(contests, null, 2));
-        console.log('Contest data of Codechef saved to data.json');
+
+        // Save each contest to MongoDB
+        await Contest.insertMany(contests);
+        console.log('Contest data of Codechef saved to MongoDB');
     } catch (error) {
         console.error('Error during scraping:', error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

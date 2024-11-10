@@ -1,7 +1,8 @@
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { JSDOM } from 'jsdom';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -42,6 +43,9 @@ function convertUTCOffsetToISO(dateTimeString) {
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://codeforces.com/contests');
@@ -61,15 +65,13 @@ async function scrapePage() {
             // console.log(date,time)
             if (date !== "Final standings" && date.includes("Before")) {
                 contests.push({
-                    id: uuidv4(),
                     event,
                     resource: "https://codeforces.com/contests",
                     date: convertUTCOffsetToISO(time),
                     href: "https://codeforces.com/contests",
                 })
-            }else if(date.includes("Running")){
+            } else if (date.includes("Running")) {
                 contests.push({
-                    id: uuidv4(),
                     event,
                     resource: "https://codeforces.com/contests",
                     date: "Live Now",
@@ -79,12 +81,15 @@ async function scrapePage() {
             }
 
         });
-        await fs.writeFile('codeforces.json', JSON.stringify(contests, null, 2));
-        console.log('Contest data of Codeforces saved to data.json');
+
+        // Save each contest to MongoDB
+        await Contest.insertMany(contests);
+        console.log('Contest data of Codeforces saved to MongoDB');
     } catch (error) {
         console.error('Error during scraping:', error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

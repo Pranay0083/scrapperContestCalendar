@@ -1,7 +1,8 @@
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { JSDOM } from 'jsdom';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,6 +29,9 @@ function convertToISO(dateStr, timeStr) {
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://www.geeksforgeeks.org/events');
@@ -45,7 +49,6 @@ async function scrapePage() {
             const date = dateElement?.textContent.trim();
             const time = timeElement?.textContent.trim();
             const contest = {
-                id: uuidv4(),
                 event: titleElement?.textContent.trim() || 'No title available',
                 resource: "https://www.geeksforgeeks.org/events",
                 date: convertToISO(date, time),
@@ -56,12 +59,15 @@ async function scrapePage() {
                 contests.push(contest);
             }
         });
-        await fs.writeFile('./geeksforgeeks.json', JSON.stringify(contests, null, 2), 'utf-8');
-        console.log('Contest data of GeeksforGeeks saved to data.json');
+
+        // Save each contest to MongoDB
+        await Contest.insertMany(contests);
+        console.log('Contest data of GeeksforGeeks saved to MongoDB');
     } catch (error) {
         console.error('Error during scraping:', error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

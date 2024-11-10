@@ -1,7 +1,8 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -53,6 +54,9 @@ function parseDateString(dateString) {
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://www.naukri.com/code360/contests');
@@ -67,7 +71,6 @@ async function scrapePage() {
             const title = ratedContestInfo(element).find('.contest-title').text().trim();
             const startTime = ratedContestInfo(element).find('.contest-timing').text().trim();
             contestData.push({
-                id: uuidv4(),
                 event: title,
                 resource: "https://www.naukri.com/code360/contests",
                 date: parseDateString(startTime),
@@ -82,7 +85,6 @@ async function scrapePage() {
             const startTime = contestCard.find('.notify.live span').text().trim() || contestCard.find('.notify.ng-star-inserted').text().trim();
             if (startTime === "Live Now") {
                 contestData.push({
-                    id: uuidv4(),
                     resource: resource,
                     href: resource,
                     event: event,
@@ -90,7 +92,6 @@ async function scrapePage() {
                 });
             } else {
                 contestData.push({
-                    id: uuidv4(),
                     resource: resource,
                     href: resource,
                     event: event,
@@ -99,12 +100,15 @@ async function scrapePage() {
             }
 
         });
-        await fs.writeFile('codingninjas.json', JSON.stringify(contestData, null, 2));
-        console.log('Contest data of Coding Ninjas saved to data.json');
+
+        // Save each contest to MongoDB
+        await Contest.insertMany(contestData);
+        console.log('Contest data of Coding Ninjas saved to MongoDB');
     } catch (error) {
         console.error("Error during scraping:", error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

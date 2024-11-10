@@ -1,7 +1,8 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js';
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,6 +23,9 @@ function convertToISO(dateTimeStr) {
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://atcoder.jp/contests/');
@@ -31,9 +35,7 @@ async function scrapePage() {
         const contests = [];
         $('#contest-table-upcoming tbody tr').each((i, elem) => {
             const startTime = $(elem).find('td:nth-child(1) time').text();
-            // const { date, time } = convertStartTimeToIST(startTime);
             const contest = {
-                id: uuidv4(),
                 event: $(elem).find('td:nth-child(2) a').text().trim(),
                 resource: "https://atcoder.jp/",
                 date: convertToISO(startTime),
@@ -41,12 +43,15 @@ async function scrapePage() {
             };
             contests.push(contest);
         });
-        await fs.writeFile('atcoder.json', JSON.stringify(contests, null, 2));
-        console.log('Contest data of Atcoder saved to data.json');
+
+        // Save each contest to MongoDB
+        await Contest.insertMany(contests);
+        console.log('Contest data of Atcoder saved to MongoDB');
     } catch (error) {
         console.error('Error during scraping:', error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 

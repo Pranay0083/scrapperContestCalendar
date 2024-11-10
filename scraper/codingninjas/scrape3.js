@@ -1,11 +1,13 @@
 import { load } from 'cheerio';
 import { Builder, Browser } from 'selenium-webdriver';
-import fs from 'fs/promises';
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import Contest from '../../models/Contest.js'; // Ensure the path is correct
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
 function convertDateTimeToISO(dateString, timeString) {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const [month, day, year] = dateString.split(' ');
@@ -34,6 +36,9 @@ function convertDateTimeToISO(dateString, timeString) {
 }
 
 async function scrapePage() {
+    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
+    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
         await driver.get('https://www.naukri.com/code360/events?selected_tab=Coding%20events');
@@ -46,7 +51,6 @@ async function scrapePage() {
             const time = $(element).find('.contest-status-container').text().trim();
             const date = $(element).find('.event-date .value').text().trim();
             contestData.push({
-                id: uuidv4(),
                 event: $(element).find('.title-container').text().trim(),
                 resource: 'https://www.naukri.com/code360/events?selected_tab=Coding%20events',
                 date: convertDateTimeToISO(date, time),
@@ -54,24 +58,14 @@ async function scrapePage() {
             });
         });
 
-        let existingData = [];
-        try {
-            const fileData = await fs.readFile('codingninjas.json', 'utf-8');
-            existingData = JSON.parse(fileData); // Parse the existing data
-        } catch (error) {
-            console.warn('No existing data found, starting with an empty array.');
-        }
-
-        // Combine the existing data with the new contest data
-        const updatedData = [...existingData, ...contestData];
-
-        // Save the updated data back to 'data.json'
-        await fs.writeFile('codingninjas.json', JSON.stringify(updatedData, null, 2));
-        console.log('Events data of Coding Ninjas saved to data.json');
+        // Save each contest to MongoDB
+        await Contest.insertMany(contestData);
+        console.log('Contest data of Naukri saved to MongoDB');
     } catch (error) {
         console.error("Error during scraping:", error);
     } finally {
         await driver.quit();
+        mongoose.connection.close();
     }
 }
 
