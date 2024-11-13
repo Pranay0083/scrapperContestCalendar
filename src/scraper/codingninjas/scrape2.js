@@ -7,9 +7,7 @@ options.addArguments('--disable-gpu');
 options.addArguments('--no-sandbox');
 options.addArguments('--disable-dev-shm-usage');
 options.addArguments('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36');
-import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
-import Contest from '../../models/Contest.js'; // Ensure the path is correct
+import Contest from '../../models/Contest.js';
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -67,8 +65,7 @@ function parseDateString(dateString) {
 }
 
 async function scrapePage() {
-    const dbURI = process.env.MONGODB_URI; // Ensure your MongoDB URI is in your .env file
-    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+     
 
     let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options.addArguments('--headless=new')).build();
     try {
@@ -104,7 +101,7 @@ async function scrapePage() {
         console.error("Error during scraping:", error);
     } finally {
         await driver.quit();
-        mongoose.connection.close();
+          
     }
 }
 

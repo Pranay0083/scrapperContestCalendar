@@ -1,7 +1,6 @@
 import { load } from 'cheerio';
 import chrome from 'selenium-webdriver/chrome.js';
 import { Builder, Browser } from 'selenium-webdriver';
-import mongoose from 'mongoose';
 import Contest from '../../models/Contest.js';
 
 const options = new chrome.Options();
@@ -45,8 +44,6 @@ function parseDateString(dateString) {
 }
 
 async function scrapePage() {
-    const dbURI = process.env.MONGODB_URI;
-    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
     let driver = await new Builder().forBrowser(Browser.CHROME).setChromeOptions(options).build();
     try {
@@ -105,7 +102,7 @@ async function scrapePage() {
         console.error("Error during scraping:", error);
     } finally {
         await driver.quit();
-        mongoose.connection.close();
+          
     }
 }
 
