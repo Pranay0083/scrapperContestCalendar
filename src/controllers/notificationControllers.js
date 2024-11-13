@@ -1,23 +1,33 @@
-import Notification from '../models/NotificationData.js';
 import User from '../models/Users.js';
+import Notification from '../models/NotificationData.js';
+import NotificationInfo from '../models/NotificationInfo.js';
 
-// Set notification
+// Set a new notification
 export const set = async (req, res) => {
     const { id } = req.params;
-    const { telegramUsername, message } = req.body;
+    const { message, time } = req.body;
 
     try {
-        // Check if user or admin exists
+        // Check if user exists
         const user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Get telegramUsername from NotificationInfo
+        const notificationInfo = await NotificationInfo.findOne({ userId: id });
+        if (!notificationInfo || !notificationInfo.telegramUsername) {
+            return res.status(404).json({ message: 'Telegram username not found' });
+        }
+
+        const telegramUsername = notificationInfo.telegramUsername;
+
         // Create a new notification
         const newNotification = new Notification({
             userId: id,
             telegramUsername,
-            message
+            message,
+            time
         });
 
         // Save the notification to the database

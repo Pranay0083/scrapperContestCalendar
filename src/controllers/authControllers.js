@@ -7,6 +7,7 @@ export const signup = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
+        
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -37,7 +38,6 @@ export const signup = async (req, res) => {
 
 // Signin function
 export const signin = async (req, res) => {
-    console.log(req.body)
     const { email, password } = req.body;
 
     try {

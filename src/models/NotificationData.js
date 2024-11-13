@@ -7,15 +7,14 @@ const notificationSchema = new Schema({
         required: true,
         ref: 'Users'
     },
-    telegramUsername: {
-        type: String,
-        required: true,
-        trim: true
-    },
     message: {
         type: String,
         required: true,
         trim: true
+    },
+    time: {
+        type: Date,
+        required: true
     }
 }, { timestamps: true });
 
