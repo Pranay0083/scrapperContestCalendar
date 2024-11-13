@@ -5,7 +5,6 @@ import connectDB from '../../config/db.js';
 const addUserToDb = async (chatId, email) => {
     try {
         connectDB()
-        console.log(email)
         const user = await User.findOne({ email });
         if (!user) {
             return { err: "User does not exist" };
