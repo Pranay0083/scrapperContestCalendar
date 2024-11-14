@@ -9,7 +9,7 @@ import userRoutes from './routes/userRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import contestRoutes from './routes/contestRoutes.js';
 import bot from './Bot/Bot.js';
-import './cronJobs.js';
+// import './cronJobs.js';
 
 dotenv.config();
 
