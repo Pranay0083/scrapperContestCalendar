@@ -52,6 +52,9 @@ async function scrapePage() {
             const linkElement = card.querySelector('a');
             const date = dateElement?.textContent.trim();
             const time = timeElement?.textContent.trim();
+            if (!date || !time) return;
+            const timeParts = time.match(/(\d+):(\d+)\s(AM|PM)\s(\w+)/);
+            if (!timeParts) return;
             const contest = {
                 event: titleElement?.textContent.trim() || 'No title available',
                 resource: "https://www.geeksforgeeks.org/events",

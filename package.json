@@ -25,7 +25,8 @@
   "scripts": {
     "start": "node src/index.js",
     "bot": "node src/Bot/bot.js",
-    "dev": "concurrently \"npm run start\" \"npm run bot\""
+    "dev": "concurrently \"npm run start\" \"npm run bot\"",
+    "scrape": "node src/runScraper.js"
   },
   "keywords": [],
   "author": "",

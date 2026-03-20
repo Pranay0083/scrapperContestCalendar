@@ -5,7 +5,10 @@ import scraper from '../scraper/scraper.js';
 export const getall = async (req, res) => {
   try {
     const contests = await Contest.find();
-    res.status(200).json({ objects: contests });
+    const lastScraped = contests.length > 0
+      ? contests.reduce((latest, c) => c.createdAt > latest ? c.createdAt : latest, contests[0].createdAt)
+      : null;
+    res.status(200).json({ objects: contests, lastScraped });
   } catch (err) {
     res.status(500).send(`Error fetching contests: ${err.message}`);
   }
