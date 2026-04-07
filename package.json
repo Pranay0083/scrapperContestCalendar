@@ -17,7 +17,7 @@
     "node-cron": "^3.0.3",
     "node-telegram-bot-api": "^0.66.0",
     "selenium-webdriver": "^4.25.0",
-    "uuid": "^10.0.0"
+    "uuid": "^13.0.0"
   },
   "name": "scrapper",
   "version": "1.0.0",
